@@ -4,7 +4,7 @@ name: PRUEBA EXITOSA DE ACTIONSFLOW
 # 1. VOLVEMOS AL TRIGGER SCHEDULE
 on:
   schedule:
-    - cron: "*/15 * * * *" 
+    - cron: "* * * * *"
   
 jobs:
   job_de_prueba:
