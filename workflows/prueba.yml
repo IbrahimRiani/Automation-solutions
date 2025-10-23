@@ -4,7 +4,7 @@ name: PRUEBA EXITOSA DE ACTIONSFLOW
 # 1. TRIGGER: Se ejecuta cada 15 minutos (aunque lo vamos a disparar manualmente)
 on:
   schedule:
-    - cron: "*/15 * * * *" 
+    - cron: "*/1 * * * *" 
     
 jobs:
   job_de_prueba:
