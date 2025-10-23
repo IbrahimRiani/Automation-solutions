@@ -1,23 +1,23 @@
 name: Actionsflow
 on:
-   schedule:
-     - cron: "*/15 * * * *"
+  schedule:
+    - cron: "*/15 * * * *" # Se ejecuta cada 15 minutos
   push:
     branches:
       - main
-  repository_dispatch:
-  workflow_dispatch:
+  repository_dispatch: # Permite disparar el flujo mediante una API de GitHub
+  workflow_dispatch:   # Permite disparar el flujo manualmente desde la interfaz de GitHub
     inputs:
       include:
-        description: "--include: workflow file filter, you can use glob format to filter your workflows, the default value is empty value, means no filter will be using"
+        description: "Filter your workflows (glob format)"
         required: false
         default: ""
       force:
-        description: "--force: whether force to run workflow, true or false"
+        description: "Force to run workflow, true or false"
         required: false
         default: "false"
       verbose:
-        description: "--verbose: debug workflow, true or false"
+        description: "Debug workflow, true or false"
         required: false
         default: "false"
 jobs:
@@ -28,9 +28,10 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Run Actionsflow
-        uses: actionsflow/actionsflow-action@v1.3.0
+        # Asegúrate de usar la versión correcta, v1.3.0 es común.
+        uses: actionsflow/actionsflow-action@v1.3.0 
         with:
-          args: "build --include ${{ github.event.inputs.include || ''}} -f ${{github.event.inputs.force=='true' && 'true' || 'false'}} --verbose ${{github.event.inputs.verbose=='true' && 'true' || 'false'}}"
+          args: "run --include ${{ github.event.inputs.include || ''}} -f ${{github.event.inputs.force=='true' && 'true' || 'false'}} --verbose ${{github.event.inputs.verbose=='true' && 'true' || 'false'}}"
           json-secrets: ${{ toJSON(secrets) }}
           json-github: ${{ toJSON(github) }}
       - name: Setup act
