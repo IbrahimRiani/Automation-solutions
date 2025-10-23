@@ -1,10 +1,11 @@
 # workflows/prueba.yml
 name: PRUEBA EXITOSA DE ACTIONSFLOW
 
-# 1. TRIGGER: Se ejecuta cada 15 minutos (aunque lo vamos a disparar manualmente)
+# 1. TRIGGER: Se ejecuta con cada commit (cada vez que haces 'push')
 on:
-  schedule:
-    - cron: "*/1 * * * *" 
+  push:
+    branches:
+      - main
     
 jobs:
   job_de_prueba:
