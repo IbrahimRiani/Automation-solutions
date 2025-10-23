@@ -1,0 +1,48 @@
+# .github/workflows/contador_diario.yml
+
+name: Contador Diario y Confirmación
+
+on:
+  # 1. Disparo Manual (para la primera prueba)
+  workflow_dispatch:
+  # 2. Disparo Programado: Se ejecuta cada hora (0 minutos de cada hora)
+  schedule:
+    - cron: '0 * * * *' 
+
+# Permisos CRÍTICOS: el token necesita permiso para escribir en el repositorio
+permissions:
+  contents: write
+
+jobs:
+  actualizar_contador:
+    name: Crear y Actualizar Archivo
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Paso 1: Descargar el código actual
+      - name: Checkout del Repositorio
+        uses: actions/checkout@v4
+        with:
+          # Es necesario pasar el token al checkout para la acción de push
+          token: ${{ secrets.GITHUB_TOKEN }} 
+          
+      # Paso 2: Generar el contenido del archivo
+      - name: Generar Contenido y Fecha
+        id: generate
+        run: |
+          FECHA_ACTUAL=$(date +'%Y-%m-%d %H:%M:%S')
+          echo "La última ejecución exitosa fue el: $FECHA_ACTUAL" > AUTOMATIZACION_EXITOSA.txt
+          
+      # Paso 3: Realizar el commit del nuevo archivo/cambio
+      - name: Commit y Subida de Archivo
+        # Usamos ad-m/github-push-action por su estabilidad
+        uses: ad-m/github-push-action@master
+        with:
+          # Token de GitHub nativo
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Rama donde se hace el cambio
+          branch: ${{ github.ref_name }}
+          # Mensaje del commit
+          commit_message: 'AUTOMATIZACION: Contador diario actualizado. Ultima ejecucion: ${{ steps.generate.outputs.FECHA_ACTUAL }}'
+          # Empuja todos los cambios
+          force: true
