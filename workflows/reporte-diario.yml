@@ -1,0 +1,65 @@
+# workflows/reporte-diario.yml
+name: Servicio de Reporte y Analisis Programado
+
+# 1. TRIGGER: Se ejecuta cada día a las 9:00 AM (0 9 * * *)
+on:
+  schedule:
+    - cron: "0 9 * * *" 
+    
+jobs:
+  proceso_de_datos:
+    name: Procesamiento y Limpieza
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4  # Clona tu repositorio para acceder a los scripts
+      
+      # 1. Configura el ambiente de programación (Ej. Python, si el cliente lo necesita)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+          
+      # 2. INSTALACIÓN DE LIBRERÍAS (necesario para data science)
+      - name: Instalar Dependencias
+        run: pip install pandas openpyxl  # Ejemplo: instalas librerías que el cliente necesite
+
+      # 3. EJECUCIÓN del script de limpieza/análisis
+      - name: Ejecutar Script de Limpieza y Guardado de Datos
+        id: data_process # Dale un ID a este paso para referenciarlo después
+        run: |
+          # Aquí va la lógica real del servicio que le vendes al cliente:
+          echo "Ejecutando script de data cleaning en datos de cliente..."
+          
+          # Ejemplo de lo que podrías hacer en un script:
+          # python ./scripts/limpiar_datos.py --input-url $SECRETS_URL --output-sheet $SECRETS_SHEET
+          
+          echo "Proceso completado exitosamente."
+          # Esto es clave para las acciones posteriores:
+          echo "output_msg=Reporte de Data Cleaning terminado" >> $GITHUB_OUTPUT
+          
+      # 4. (OPCIONAL) Notificar al cliente o a ti mismo
+      - name: Notificacion de Éxito
+        uses: sarisia/actions-slack-notify@v1.9.1
+        if: success()
+        env:
+          # Debes configurar un SECRETO llamado SLACK_WEBHOOK en GitHub
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "${{ steps.data_process.outputs.output_msg }} para el cliente X."
+    ```
+
+3.  **Commit:** Haz el *commit* del nuevo archivo.
+
+---
+
+## 🚀 Verificación del Trigger Programado
+
+Dado que has usado el *schedule* (`cron: "0 9 * * *" `), este flujo de trabajo se ejecutará solo una vez al día a las 9:00 AM.
+
+**Para probarlo ahora mismo:**
+
+1.  Ve a la pestaña **Actions** (Acciones).
+2.  Busca el *workflow* **"Servicio de Reporte y Analisis Programado"** (o como lo hayas llamado).
+3.  Haz clic en el botón **"Run workflow"** para ejecutarlo manualmente.
+
+Si la ejecución termina en verde, **¡el esqueleto de tu servicio de automatización programada es estable y puedes empezar a ofrecerlo!** Olvídate del Webhook por ahora, tienes muchos otros servicios valiosos que puedes vender.
