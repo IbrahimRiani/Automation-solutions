@@ -1,0 +1,32 @@
+# workflows/prueba.yml
+name: PRUEBA EXITOSA DE ACTIONSFLOW
+
+# 1. TRIGGER: Se ejecuta cada 15 minutos (aunque lo vamos a disparar manualmente)
+on:
+  schedule:
+    - cron: "*/15 * * * *" 
+    
+jobs:
+  job_de_prueba:
+    name: Generar Resultado
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Mensaje de confirmacion
+        run: |
+          echo "========================================="
+          echo "¡ACTIONSFLOW ESTÁ FUNCIONANDO CORRECTAMENTE!"
+          echo "Este es el paso de prueba de la automatización."
+          echo "========================================="
+          
+      - name: Crear archivo de confirmacion
+        run: |
+          # Genera un archivo simple con la fecha para confirmar la ejecución
+          DATE=$(date +'%Y-%m-%d_%H:%M:%S')
+          echo "Prueba exitosa ejecutada el: $DATE" > prueba_de_trabajo.txt
+          
+      # ⚠️ ESTE PASO ES CLAVE: Guarda el archivo generado en tu repositorio
+      - name: Commit y Subida de Archivo
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'ACCIÓN AUTOMATIZADA: Prueba de Actionsflow - Ejecución exitosa'
