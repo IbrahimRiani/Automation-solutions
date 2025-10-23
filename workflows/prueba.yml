@@ -1,33 +1,33 @@
 # workflows/prueba.yml
 name: PRUEBA EXITOSA DE ACTIONSFLOW
 
-# 1. TRIGGER: Se ejecuta con cada commit (cada vez que haces 'push')
+# 1. VOLVEMOS AL TRIGGER SCHEDULE
 on:
-  push:
-    branches:
-      - main
-    
+  schedule:
+    - cron: "*/15 * * * *" 
+  
 jobs:
   job_de_prueba:
     name: Generar Resultado
     runs-on: ubuntu-latest
     
     steps:
+      - uses: actions/checkout@v4
+      
       - name: Mensaje de confirmacion
         run: |
           echo "========================================="
-          echo "¡ACTIONSFLOW ESTÁ FUNCIONANDO CORRECTAMENTE!"
-          echo "Este es el paso de prueba de la automatización."
+          echo "¡ACTIONSFLOW ESTÁ LISTO PARA AUTOMATIZAR!"
           echo "========================================="
           
       - name: Crear archivo de confirmacion
         run: |
-          # Genera un archivo simple con la fecha para confirmar la ejecución
           DATE=$(date +'%Y-%m-%d_%H:%M:%S')
           echo "Prueba exitosa ejecutada el: $DATE" > prueba_de_trabajo.txt
           
-      # ⚠️ ESTE PASO ES CLAVE: Guarda el archivo generado en tu repositorio
+      # 2. AÑADIMOS EL TOKEN REQUERIDO
       - name: Commit y Subida de Archivo
         uses: stefanzweifel/git-auto-commit-action@v5
         with:
           commit_message: 'ACCIÓN AUTOMATIZADA: Prueba de Actionsflow - Ejecución exitosa'
+          token: ${{ secrets.GITHUB_TOKEN }} # <--- CLAVE
