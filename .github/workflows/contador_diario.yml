@@ -33,16 +33,14 @@ jobs:
           FECHA_ACTUAL=$(date +'%Y-%m-%d %H:%M:%S')
           echo "La última ejecución exitosa fue el: $FECHA_ACTUAL" > AUTOMATIZACION_EXITOSA.txt
           
-      # Paso 3: Realizar el commit del nuevo archivo/cambio
-      - name: Commit y Subida de Archivo
-        # Usamos ad-m/github-push-action por su estabilidad
-        uses: ad-m/github-push-action@master
+     # Paso 3: Realizar el commit del nuevo archivo/cambio
+      - name: Commit y Subida de Archivo (Final)
+        # Usamos la acción estable de auto-commit
+        uses: stefanzweifel/git-auto-commit-action@v5
         with:
-          # Token de GitHub nativo
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Rama donde se hace el cambio
-          branch: ${{ github.ref_name }}
-          # Mensaje del commit
-          commit_message: 'AUTOMATIZACION: Contador diario actualizado. Ultima ejecucion: ${{ steps.generate.outputs.FECHA_ACTUAL }}'
-          # Empuja todos los cambios
-          force: true
+          # Define los archivos que deben ser agregados/subidos
+          commit_message: 'AUTOMATIZACION: Contador diario actualizado [CORRECCIÓN FINAL]'
+          # La siguiente línea indica que debe agregar TODOS los archivos modificados
+          file_pattern: 'AUTOMATIZACION_EXITOSA.txt'
+          # Usamos el token nativo que ya tiene permisos de escritura
+          token: ${{ secrets.GITHUB_TOKEN }}
