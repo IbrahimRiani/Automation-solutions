@@ -20,6 +20,10 @@ on:
         description: "Debug workflow, true or false"
         required: false
         default: "false"
+  # AÑADE ESTE BLOQUE
+permissions:
+  contents: write # Esto da permiso para escribir y crear archivos (el auto-commit)
+  pull-requests: write # Esto también es útil para futuras automatizaciones
 jobs:
   run:
     runs-on: ubuntu-latest
