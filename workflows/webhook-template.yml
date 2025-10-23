@@ -1,0 +1,23 @@
+# workflows/webhook-template.yml
+name: Webhook Data Receiver Template
+
+# 1. TRIGGER: Se activa al recibir datos en una URL única.
+on:
+  webhook: ~ 
+
+# 2. JOBS: Tareas a ejecutar.
+jobs:
+  log_data:
+    name: Log Received Data
+    runs-on: ubuntu-latest
+    steps:
+      # Puedes usar cualquier acción de GitHub aquí. 
+      # La acción actions-toolkit/github-script es útil para la lógica.
+      - name: Show received data
+        run: |
+          echo "--- Datos recibidos por el Webhook ---"
+          # Imprime el cuerpo completo (body) recibido
+          echo "${{ toJSON(on.webhook.outputs.body) }}"
+          echo "-------------------------------------"
+          # Ejemplo de cómo acceder a una propiedad específica (ej. on.webhook.outputs.body.name)
+          echo "Campos a analizar: ${{ toJSON(on.webhook.outputs.body) }}"
