@@ -1,12 +1,12 @@
 name: Actionsflow
 on:
   schedule:
-    - cron: "*/15 * * * *" # Se ejecuta cada 15 minutos
+    - cron: "*/15 * * * *"
   push:
     branches:
       - main
-  repository_dispatch: # Permite disparar el flujo mediante una API de GitHub
-  workflow_dispatch:   # Permite disparar el flujo manualmente desde la interfaz de GitHub
+  repository_dispatch:
+  workflow_dispatch:
     inputs:
       include:
         description: "Filter your workflows (glob format)"
@@ -27,14 +27,11 @@ jobs:
     concurrency: actionsflow
     steps:
       - uses: actions/checkout@v3
-      - name: Run Actionsflow
-        # Asegúrate de usar la versión correcta, v1.3.0 es común.
-        uses: actionsflow/actionsflow-action@v1.3.0 
+      - name: Run Actionsflow 
+        uses: actionsflow/actionsflow-action@v1.3.0
         with:
+          # CAMBIAR a "run" para que compile Y ejecute
           args: "run --include ${{ github.event.inputs.include || ''}} -f ${{github.event.inputs.force=='true' && 'true' || 'false'}} --verbose ${{github.event.inputs.verbose=='true' && 'true' || 'false'}}"
           json-secrets: ${{ toJSON(secrets) }}
           json-github: ${{ toJSON(github) }}
-      - name: Setup act
-        uses: actionsflow/setup-act-for-actionsflow@v1.2.0
-      - name: Run act
-        run: act --workflows ./dist/workflows --secret-file ./dist/.secrets --eventpath ./dist/event.json --env-file ./dist/.env -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-latest
+      # ELIMINAR LOS PASOS "Setup act" y "Run act" DE AQUÍ EN ADELANTE
