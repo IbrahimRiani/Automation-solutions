@@ -1,10 +1,9 @@
-# workflows/prueba.yml
+# .github/workflows/workflows/prueba.yml
 name: PRUEBA EXITOSA DE ACTIONSFLOW
-
-# 1. VOLVEMOS AL TRIGGER SCHEDULE
 on:
+  # Dejamos el cron de 1 minuto para que se ejecute solo si fallamos el manual
   schedule:
-    - cron: "* * * * *"
+    - cron: "* * * * *" 
   
 jobs:
   job_de_prueba:
@@ -20,14 +19,10 @@ jobs:
           echo "¡ACTIONSFLOW ESTÁ LISTO PARA AUTOMATIZAR!"
           echo "========================================="
           
+      # ⚠️ SOLO VAMOS A CREAR EL ARCHIVO, NO HACER COMMIT
       - name: Crear archivo de confirmacion
         run: |
           DATE=$(date +'%Y-%m-%d_%H:%M:%S')
-          echo "Prueba exitosa ejecutada el: $DATE" > prueba_de_trabajo.txt
+          echo "Prueba exitosa ejecutada el: $DATE" > prueba_de_trabajo_solo_creacion.txt
           
-      # 2. AÑADIMOS EL TOKEN REQUERIDO
-      - name: Commit y Subida de Archivo
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: 'ACCIÓN AUTOMATIZADA: Prueba de Actionsflow - Ejecución exitosa'
-          token: ${{ secrets.GITHUB_TOKEN }} # <--- CLAVE
+      # ELIMINAMOS EL PASO Commit y Subida de Archivo
