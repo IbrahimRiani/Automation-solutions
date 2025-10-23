@@ -3,6 +3,9 @@
 name: Contador Diario y Confirmación
 
 on:
+  # AÑADIR ESTA SECCIÓN: Se dispara con cada commit a la rama 'main'
+  push:
+    branches: [ main ] # Asumiendo que tu rama principal es 'main'
   # 1. Disparo Manual (para la primera prueba)
   workflow_dispatch:
   # 2. Disparo Programado: Se ejecuta cada hora (0 minutos de cada hora)
